@@ -1,312 +1,290 @@
-# Medical MNIST Classification with Few-Shot Learning
+# Few-Shot Learning for Reducing Data Dependency in AI Models
 
-This project implements a few-shot learning approach using a Prototypical Network (ProtoNet) for classifying medical images from the Medical MNIST dataset. It also includes a baseline Convolutional Neural Network (CNN) for comparison. The code is written in Python using PyTorch and includes data visualization, model training, evaluation, and t-SNE embedding analysis.
+A deep learning project implementing Few-Shot Learning using Prototypical Networks to reduce the data requirements of AI models in medical image classification.
 
-# Table of Contents
+## Project Overview
 
+Traditional deep learning models require large labeled datasets to achieve high accuracy. In domains such as medical imaging, collecting labeled data is expensive and time-consuming.
 
+This project explores Few-Shot Learning, a paradigm where models learn to generalize from very small training samples.
 
+The model learns a feature embedding space where samples belonging to the same class are clustered together, enabling accurate classification even with very limited labeled data.
 
+This repository implements:
 
-Project Overview
+Prototypical Networks (ProtoNet)
 
+Few-shot episodic training
 
+Baseline CNN comparison
 
-Dataset
+Embedding visualization using t-SNE
 
+## Key Features
 
+Few-Shot Learning implementation using Prototypical Networks
 
-Features
+Training with N-way K-shot learning
 
+Baseline CNN model for comparison
 
+Medical MNIST dataset support
 
-Requirements
+Visualization of learned embeddings
 
+Modular PyTorch implementation
 
+## Dataset
 
-Installation
+The project uses the Medical MNIST dataset, which contains grayscale medical images across multiple diagnostic categories.
 
+Dataset classes used:
 
+AbdomenCT
 
-Usage
+BreastMRI
 
+ChestCT
 
+CXR
 
-File Structure
+Hand
 
+HeadCT
 
+Each image represents a medical scan belonging to a specific anatomical region.
 
-Results
+Image Properties
 
+| Property          | Value     |
+| ----------------- | --------- |
+| Image Type        | Grayscale |
+| Input Size        | 28×28     |
+| Channels          | 1         |
+| Number of Classes | 6         |
 
 
-Contributing
+## Few-Shot Learning Concept
 
+Few-Shot Learning trains models using episodes instead of standard batches.
 
+Each episode contains:
 
-License
+Support Set → few labeled examples per class
 
-# Project Overview
+Query Set → samples used to evaluate classification
 
-The goal of this project is to classify medical images from the Medical MNIST dataset, which contains 64x64 grayscale images across six classes: AbdomenCT, BreastMRI, ChestCT, CXR, Hand, and HeadCT. The project compares two approaches:
+Example Episode
 
+5-way 5-shot learning:
 
+5 classes
 
+5 support samples per class
 
+Query samples used for evaluation
 
-Prototypical Network (ProtoNet): A few-shot learning model that learns to classify images with limited examples (n-way, k-shot).
+The model learns to compare samples rather than memorize data.
 
+## Prototypical Networks
 
+Prototypical Networks represent each class using a prototype vector.
 
-Baseline CNN: A standard convolutional neural network trained with supervised learning for comparison.
+A prototype is the mean embedding of all support samples belonging to that class.
 
-The project includes data preprocessing, model training, evaluation metrics (accuracy, precision, recall, F1-score), confusion matrix visualization, and t-SNE visualization of learned embeddings.
+Prototype Formula
 
-# Dataset
+<img width="694" height="274" alt="image" src="https://github.com/user-attachments/assets/338c7479-d82c-40cc-8336-95cb6b405bad" />
 
-The Medical MNIST dataset consists of 64x64 grayscale medical images across six classes. The dataset is expected to be organized in the following structure:
 
-data_dir/
-├── AbdomenCT/
-├── BreastMRI/
-├── ChestCT/
-├── CXR/
-├── Hand/
-├── HeadCT/
+## Classification Rule
 
-Each folder contains images for the respective class. You can download the dataset or use your own compatible dataset.
+<img width="686" height="319" alt="image" src="https://github.com/user-attachments/assets/8708350b-7800-45f8-9f06-1eb643e56ed5" />
 
-# Features
+## Model Architecture
 
+The encoder network converts images into embedding vectors.
 
+Protonet Encoder
 
+<img width="662" height="438" alt="image" src="https://github.com/user-attachments/assets/bee8affa-1f42-482d-b366-66d269dc893b" />
 
 
-Custom Dataset Class: Loads and preprocesses Medical MNIST images using PyTorch's Dataset class.
+The embedding space allows similar images to be grouped together.
 
+## Baseline CNN Model
 
+A conventional CNN classifier is implemented for comparison.
 
-Data Visualization: Displays representative images from each class.
+Architecture:
 
+<img width="589" height="209" alt="image" src="https://github.com/user-attachments/assets/9bfd8b6f-4bf8-4bb8-8fd9-24b8c0a794bc" />
 
+Unlike ProtoNet, this model requires large datasets to generalize effectively.
 
-ProtoNet Implementation: Few-shot learning with customizable n-way, k-shot, and q-query settings.
+## Training Methodology
 
+The ProtoNet is trained using episodic training, which simulates few-shot learning scenarios during training.
 
+Each training episode:
 
-Baseline CNN: A standard CNN for comparison with ProtoNet.
+1. Sample N classes
 
+2. Select K support samples per class
 
+3. Compute class prototypes
 
-Training and Evaluation: Training loops for both models, with loss plotting and evaluation metrics.
+4. Embed query samples
 
+5. Compute distances to prototypes
 
+6. Apply softmax loss
 
-t-SNE Visualization: Visualizes learned embeddings in 2D space to analyze model performance.
+7. Update model parameters
 
+## Training Configuration
 
+| Parameter     | Value   |
+| ------------- | ------- |
+| Framework     | PyTorch |
+| Optimizer     | Adam    |
+| Learning Rate | 0.001   |
+| Epochs        | 20      |
+| N-way         | 5       |
+| K-shot        | 5       |
+| Query Samples | 5       |
 
-Confusion Matrix: Visualizes classification performance for the few-shot model.
+## Visualization using t-SNE
 
-# Requirements
+To analyze learned representations, embeddings are projected to 2D space using t-SNE.
 
-To run this project, you need the following dependencies:
+Purpose:
 
+1. Evaluate cluster separation
 
+2. Validate embedding quality
 
+3. Visualize class relationships
 
+Well-trained ProtoNet embeddings show clear cluster separation between classes.
 
-Python 3.8+
+Project Structure
 
+<img width="737" height="545" alt="image" src="https://github.com/user-attachments/assets/3c1bd97d-e57c-4e83-9004-5ad931ad08c7" />
 
 
-PyTorch
-
-
-
-torchvision
-
-
-
-NumPy
-
-
-
-Pillow (PIL)
-
-
-
-scikit-learn
-
-
-
-matplotlib
-
-
-
-seaborn
-
-
-
-tqdm
-
-
-
-Jupyter Notebook (optional, for interactive execution)
-
-# Installation
-
-
-
-
+## Installation
 
 Clone the repository:
 
-git clone https://github.com/your-username/medical-mnist-few-shot.git
-cd medical-mnist-few-shot
+git clone https://github.com/yourusername/few-shot-learning.git
+cd few-shot-learning
 
+Install dependencies:
 
+pip install -r requirements.txt
 
-Create a virtual environment (optional but recommended):
+Dependencies include:
 
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+1. PyTorch
 
+2. NumPy
 
+3. Scikit-learn
 
-Install the required packages:
+4. Matplotlib
 
-pip install torch torchvision numpy pillow scikit-learn matplotlib seaborn tqdm
+5. Pillow
 
+## Running the Project
 
+Launch Jupyter Notebook
 
-Ensure the Medical MNIST dataset is placed in the appropriate directory (e.g., C:\Users\sonke\Desktop\python CA2 or update the data_dir path in the code).
+Open: few_shot_learning.ipynb
 
-# Usage
+Run all cells sequentially to:
 
+1. Load dataset
 
+2. Train ProtoNet
 
+3. Train baseline CNN
 
+4. Evaluate results
 
-Update the data_dir variable in the script to point to your dataset directory:
+5. Visualize embeddings
 
-data_dir = r'path/to/your/medical_mnist_dataset'
+## Results
 
+The ProtoNet model demonstrates strong performance even with limited training samples.
 
+Observations:
 
-Run the script or Jupyter Notebook:
+1. Few-shot learning significantly reduces data requirements
 
-python medical_mnist_few_shot.py
+2. ProtoNet embeddings form well-separated clusters
 
-or open the notebook in Jupyter:
+3. Baseline CNN requires larger datasets to perform similarly
 
-jupyter notebook medical_mnist_few_shot.ipynb
+## Applications
 
+Few-Shot Learning is particularly useful in domains with limited labeled data.
 
+Applications include:
 
-The script will:
+1. Medical image classification
 
+2. Rare disease detection
 
+3. Low-resource NLP tasks
 
+4. Fraud detection
 
+5. Robotics and autonomous systems
 
-Load and preprocess the dataset.
+## Future Work
 
+Possible improvements include:
 
+1. Implement Siamese Networks
 
-Visualize representative images.
+2. Explore MAML (Model-Agnostic Meta Learning)
 
+3. Use deeper architectures like ResNet
 
+4. Increase dataset diversity
 
-Train the baseline CNN and evaluate its accuracy.
+5. Hyperparameter optimization
 
+## Research References
 
+Key papers related to this work:
 
-Train the ProtoNet model and evaluate its performance (accuracy, precision, recall, F1-score).
+Prototypical Networks for Few-Shot Learning
+Jake Snell, Kevin Swersky, Richard Zemel
+NeurIPS 2017
 
+Matching Networks for One Shot Learning
+Vinyals et al.
 
+Model-Agnostic Meta-Learning (MAML)
+Finn et al.
 
-Generate visualizations (loss curves, confusion matrix, t-SNE embeddings).
+Author
 
-# File Structure
+Ansh Kumar Sonker
+B.Tech Computer Science Engineering
 
-medical-mnist-few-shot/
-├── medical_mnist_few_shot.py  # Main Python script (or .ipynb for Jupyter)
-├── README.md                  # This file
-├── data/                      # Dataset directory (not included, user-provided)
-│   ├── AbdomenCT/
-│   ├── BreastMRI/
-│   └── ...
-└── outputs/                   # Generated plots (e.g., loss curves, t-SNE, confusion matrix)
+Project Focus:
 
-# Results
+1. Few-Shot Learning
 
+2. Machine Learning
 
+3. Medical Image Classification
 
+4. Data Efficient AI
 
+## License
 
-Baseline CNN: Achieves classification accuracy on the test set (reported during execution).
-
-
-
-ProtoNet: Evaluated on few-shot tasks (e.g., 5-way, 5-shot) with metrics including accuracy, precision, recall, and F1-score.
-
-
-
-Visualizations:
-
-
-
-
-
-Representative images for each class.
-
-
-
-Training loss curves for both models.
-
-
-
-Confusion matrix for ProtoNet.
-
-
-
-t-SNE visualization of ProtoNet embeddings.
-
-Sample output:
-
-Baseline CNN Accuracy: 0.XXXX
-Training Prototypical Network...
-Epoch [20/20], Loss: X.XXXX
-Evaluating on test set...
-Accuracy: 0.XXXX, Precision: 0.XXXX, Recall: 0.XXXX, F1-Score: 0.XXXX
-
-# Contributing
-
-Contributions are welcome! Please follow these steps:
-
-
-
-
-
-Fork the repository.
-
-
-
-Create a new branch (git checkout -b feature/your-feature).
-
-
-
-Commit your changes (git commit -m 'Add your feature').
-
-
-
-Push to the branch (git push origin feature/your-feature).
-
-
-
-Open a Pull Request.
-
-# License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is intended for academic and educational purposes.
